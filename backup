@@ -1,0 +1,66 @@
+#!/bin/bash
+#this script makes a backup of my Des	
+#we establish the source directory we are to backup
+
+
+
+
+echo "---------------------"
+echo "welcome ,lets buckup "
+echo "---------------------"
+#check for the required libraries
+#rsync is used to copy files between two computers
+#less is the pager that will be used 
+ 
+ dpkg -l | grep -qw rsync || sudo apt-get install rsync
+ dpkg -l | grep -qw less || sudo apt-get install less
+
+
+if [ ! -z "$1" ]
+then
+	BACKUPDIR="$1"
+else
+	echo "program will backup entire home dir"
+	BACKUPDIR=$HOME
+fi
+
+#check the file name to save to remote
+if [ ! -z "$2" ]
+then
+	BACKUPFILES="$2".tar
+else
+	echo "file will be saved as mybackup.tar.bz2"
+	BACKUPFILES="mybackup.tar"
+fi
+
+ 
+#here i decided to sepparate the process of archiving and compressing
+#we use tar to archove our files
+tar cf $BACKUPFILES $BACKUPDIR
+if [ -f "$HOME/.backuplog" ]
+then 
+
+	echo "started backup at `date` for user $USERNAME"&>"$HOME/.backuplog"
+	echo "archiving $BACKUPDIR started at `date`"&>>"$HOME/.backuplog"
+
+else
+#no log file ,well create one
+	echo "archiving $BACKUPDIR started at `date` " &>>"$HOME/.backuplog"
+fi
+
+#rm $BACKUPFILES.bz2 &> /dev/null
+#compress our tar file using bzip2
+
+bzip2 $BACKUPFILES
+
+#scp $BACKUPFILES.bz2 "user@remote_ip:~/backup" &>> ~/Desktop/.log
+#we use rsync to copy and sync our data to the remote host
+#both machines must have rsync installed
+rsync -avrv --delete --info=progress2 $BACKUPFILES.bz2 "remote_user@remote_ip:~/backup/$BACKUPFILES.bz2"
+echo "------succefful-------"
+
+
+
+
+
+
