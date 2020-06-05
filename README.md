@@ -14,10 +14,11 @@ backup version 1.0
       that are in the remote destination but not in the source dir
 **The remote server or machine is accessed using ssh One needs to have set ssh keys to access the server.**
 ##### Executing
-To run the program just download and extract to your local machine...copy the backup file to your path
-**NOTE:you must have a remote server and ssh must be installed on both machines**
+To run the program just download and extract to your local machine.
+copy the backup file to your path.
+* NOTE:you must have a remote server and ssh must be installed on both machines
 
-*REPLACE THE USERNAME and IP WITH YOUR OWN at the line that uses rsync*
+REPLACE THE USERNAME and IP WITH YOUR OWN at the line that uses rsync
 
 ```
   USAGE
